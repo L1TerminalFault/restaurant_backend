@@ -58,8 +58,8 @@ already exists. -->
 
 ```json
 {
-  "full_name": "John Doe",
-  "email": "john@example.com",
+  "full_name": "somebody",
+  "email": "none@example.com",
   "password": "password123",
   "role": "restaurant_owner"
 }
@@ -69,7 +69,7 @@ already exists. -->
 
 ```json
 {
-  "email": "john@example.com",
+  "email": "none@example.com",
   "password": "password123"
 }
 ```
@@ -89,7 +89,7 @@ already exists. -->
 
 ```json
 {
-  "author_name": "John Doe",
+  "author_name": "somebody",
   "rating": 5,
   "message": "Excellent food!"
 }
@@ -106,8 +106,8 @@ already exists. -->
 
 ```json
 {
-  "full_name": "John Doe",
-  "email": "john@example.com",
+  "full_name": "somebody",
+  "email": "none@example.com",
   "password": "newpassword123",
   "profile_image": "https://example.com/profile.jpg"
 }
