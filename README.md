@@ -28,6 +28,19 @@ The server starts on `:8080` (configurable via `PORT`). Tables are
 auto-migrated on startup — make sure the Postgres database in `DATABASE_URL`
 already exists. -->
 
+## Schema
+
+| Entity           | Fields                                                                                                                                                                                 |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **User**         | FullName, Email, Password, Role (`super_admin` / `restaurant_owner` / `staff`), CreatedAt                                                                                              |
+| **Restaurant**   | NameEn/NameAm, CustomSubLink, Logo, Banner, Slogan, Images (3 free / 6 premium), LongerDescription, Location/Phone/OpenHours, AvailableLocations, FoodSpecifications — owned by a User |
+| **Category**     | Name — belongs to a Restaurant                                                                                                                                                         |
+| **Food**         | Name, Price, RatingAmount/Count, Tag, Description, Ingredients, Pic, PrepTime, Calories, BestPairings, IsSpicy — belongs to a Category                                                 |
+| **Comment**      | AuthorName, Rating, Message, Time — belongs to a Food                                                                                                                                  |
+| **Subscription** | Plan (`free`/`premium`), JoinTime, LastPaymentRenewal, LastRenewal, ExpiresAt — one per Restaurant                                                                                     |
+| **QRCode**       | TableID (optional), RestaurantName, ImageURL — belongs to a Restaurant                                                                                                                 |
+
+
 ## For `POST` and `PUT` requests their required body is under each table
 
 # API Routes
@@ -242,18 +255,6 @@ already exists. -->
   "duration_days": 30
 }
 ```
-
-## Schema
-
-| Entity           | Fields                                                                                                                                                                                 |
-| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **User**         | FullName, Email, Password, Role (`super_admin` / `restaurant_owner` / `staff`), CreatedAt                                                                                              |
-| **Restaurant**   | NameEn/NameAm, CustomSubLink, Logo, Banner, Slogan, Images (3 free / 6 premium), LongerDescription, Location/Phone/OpenHours, AvailableLocations, FoodSpecifications — owned by a User |
-| **Category**     | Name — belongs to a Restaurant                                                                                                                                                         |
-| **Food**         | Name, Price, RatingAmount/Count, Tag, Description, Ingredients, Pic, PrepTime, Calories, BestPairings, IsSpicy — belongs to a Category                                                 |
-| **Comment**      | AuthorName, Rating, Message, Time — belongs to a Food                                                                                                                                  |
-| **Subscription** | Plan (`free`/`premium`), JoinTime, LastPaymentRenewal, LastRenewal, ExpiresAt — one per Restaurant                                                                                     |
-| **QRCode**       | TableID (optional), RestaurantName, ImageURL — belongs to a Restaurant                                                                                                                 |
 
 
 ## Notable design decisions
