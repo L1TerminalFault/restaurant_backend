@@ -1,7 +1,7 @@
 # Restaurant Management Backend (Go)
 
 A REST API for a multi-restaurant management platform: restaurant owners manage
-their menu, branding, and QR codes; the platform admin manages premium
+their menu and branding<!-- , and QR codes -->; the platform admin manages premium
 subscriptions.
 
 ## Stack
@@ -38,7 +38,7 @@ already exists. -->
 | **Food**         | Name, Price, RatingAmount/Count, Tag, Description, Ingredients, Pic, PrepTime, Calories, BestPairings, IsSpicy — belongs to a Category                                                 |
 | **Comment**      | AuthorName, Rating, Message, Time — belongs to a Food                                                                                                                                  |
 | **Subscription** | Plan (`free`/`premium`), JoinTime, LastPaymentRenewal, LastRenewal, ExpiresAt — one per Restaurant                                                                                     |
-| **QRCode**       | TableID (optional), RestaurantName, ImageURL — belongs to a Restaurant                                                                                                                 |
+<!-- | **QRCode**       | TableID (optional), RestaurantName, ImageURL — belongs to a Restaurant                                                                                                                 | -->
 
 
 ## For `POST` and `PUT` requests, their required body is under each table
@@ -128,8 +128,8 @@ already exists. -->
 | DELETE | `/restaurants/:id/categories/:categoryId/foods/:foodId` | Deletes a food item                   |
 | GET    | `/restaurants/:id/subscription`                         | Returns the restaurant's subscription |
 | POST   | `/restaurants/:id/subscription/upgrade`                 | Upgrades the restaurant subscription  |
-| GET    | `/restaurants/:id/qrcodes`                              | Lists restaurant QR codes             |
-| DELETE | `/restaurants/:id/qrcodes/:qrId`                        | Deletes a QR code                     |
+<!-- | GET    | `/restaurants/:id/qrcodes`                              | Lists restaurant QR codes             | -->
+<!-- | DELETE | `/restaurants/:id/qrcodes/:qrId`                        | Deletes a QR code                     | -->
 
 ### POST `/restaurants`
 
@@ -212,13 +212,13 @@ already exists. -->
 | DELETE | `/admin/foods/:foodId`                | Deletes any food item                     |
 | GET    | `/admin/comments`                     | Lists all comments                        |
 | DELETE | `/admin/comments/:commentId`          | Deletes a comment                         |
-| GET    | `/admin/qrcodes`                      | Lists all QR codes                        |
+<!-- | GET    | `/admin/qrcodes`                      | Lists all QR codes                        | -->
 
 ### PUT /admin/profile
 
 ```json
 {
-  "full_name": "John Admin",
+  "full_name": "Super Admin",
   "email": "admin@example.com",
   "password": "newpassword123",
   "profile_image": "https://example.com/profile.jpg"
@@ -275,9 +275,9 @@ already exists. -->
 3. **First super_admin**: the register endpoint blocks self-registering as
    `super_admin` on purpose. Create the first admin directly in the database,
    or add a one-off seed script.
-4. **Multilingual**: `NameEn`/`NameAm` are separate columns rather than a
+<!-- 4. **Multilingual**: `NameEn`/`NameAm` are separate columns rather than a
    generic i18n table — simplest fit for a two-language (Eng/Amh) requirement
-   like yours. Extend to a translations table if you add more languages.
+   like yours. Extend to a translations table if you add more languages. -->
 
 <!-- ## Project layout
 

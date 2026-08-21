@@ -79,8 +79,8 @@ func Setup(r *gin.Engine) {
 
 		// QR Code CRUD
 		// restaurants.POST("/:id/qrcodes", handlers.CreateQR)
-		restaurants.GET("/:id/qrcodes", handlers.ListQRCodes)
-		restaurants.DELETE("/:id/qrcodes/:qrId", handlers.DeleteQR)
+		// restaurants.GET("/:id/qrcodes", handlers.ListQRCodes)
+		// restaurants.DELETE("/:id/qrcodes/:qrId", handlers.DeleteQR)
 	}
 
 	// ---------- Platform super_admin (Full Global Oversight & CRUD) ----------
@@ -118,7 +118,7 @@ func Setup(r *gin.Engine) {
 		admin.DELETE("/comments/:commentId", handlers.DeleteComment)
 
 		// QR Codes Global Views & Management
-		admin.GET("/qrcodes", handlers.AdminListQRCodes)
-		admin.DELETE("/qrcodes/:qrId", handlers.DeleteQR)
+		// admin.GET("/qrcodes", handlers.AdminListQRCodes)
+		// admin.DELETE("/qrcodes/:qrId", handlers.DeleteQR)
 	}
 }

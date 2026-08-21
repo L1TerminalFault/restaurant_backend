@@ -2,13 +2,13 @@ package handlers
 
 import (
 	// "fmt"
-	"net/http"
+	// "net/http"
 	// "os"
 
-	"restaurant-backend/database"
-	"restaurant-backend/models"
+	// "restaurant-backend/database"
+	// "restaurant-backend/models"
 
-	"github.com/gin-gonic/gin"
+	// "github.com/gin-gonic/gin"
 	// "github.com/google/uuid"
 	// qrcode "github.com/skip2/go-qrcode"
 )
@@ -67,36 +67,36 @@ import (
 // 	c.JSON(http.StatusCreated, qr)
 // }
 
-func ListQRCodes(c *gin.Context) {
-	restaurantID := c.Param("id")
-	if _, ok := findOwnedRestaurant(c, restaurantID); !ok {
-		return
-	}
-	var qrs []models.QRCode
-	if err := database.DB.Where("restaurant_id = ?", restaurantID).Find(&qrs).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch qr codes"})
-		return
-	}
-	c.JSON(http.StatusOK, qrs)
-}
-
-func AdminListQRCodes(c *gin.Context) {
-	var qrcodes []models.QRCode
-	if err := database.DB.Find(&qrcodes).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch qrcodes"})
-		return
-	}
-	c.JSON(http.StatusOK, qrcodes)
-}
-
-func DeleteQR(c *gin.Context) {
-	restaurantID := c.Param("id")
-	if _, ok := findOwnedRestaurant(c, restaurantID); !ok {
-		return
-	}
-	if err := database.DB.Where("id = ? AND restaurant_id = ?", c.Param("qrId"), restaurantID).Delete(&models.QRCode{}).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to delete qr code"})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{"message": "qr code deleted"})
-}
+// func ListQRCodes(c *gin.Context) {
+// 	restaurantID := c.Param("id")
+// 	if _, ok := findOwnedRestaurant(c, restaurantID); !ok {
+// 		return
+// 	}
+// 	var qrs []models.QRCode
+// 	if err := database.DB.Where("restaurant_id = ?", restaurantID).Find(&qrs).Error; err != nil {
+// 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch qr codes"})
+// 		return
+// 	}
+// 	c.JSON(http.StatusOK, qrs)
+// }
+//
+// func AdminListQRCodes(c *gin.Context) {
+// 	var qrcodes []models.QRCode
+// 	if err := database.DB.Find(&qrcodes).Error; err != nil {
+// 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch qrcodes"})
+// 		return
+// 	}
+// 	c.JSON(http.StatusOK, qrcodes)
+// }
+//
+// func DeleteQR(c *gin.Context) {
+// 	restaurantID := c.Param("id")
+// 	if _, ok := findOwnedRestaurant(c, restaurantID); !ok {
+// 		return
+// 	}
+// 	if err := database.DB.Where("id = ? AND restaurant_id = ?", c.Param("qrId"), restaurantID).Delete(&models.QRCode{}).Error; err != nil {
+// 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to delete qr code"})
+// 		return
+// 	}
+// 	c.JSON(http.StatusOK, gin.H{"message": "qr code deleted"})
+// }
