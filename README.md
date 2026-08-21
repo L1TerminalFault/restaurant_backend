@@ -10,19 +10,7 @@ subscriptions.
 - **GORM + PostgreSQL** — ORM / database
 - **JWT** — auth
 - **bcrypt** — password hashing
-- **go-qrcode** — QR image generation
-
-## Schema
-
-| Entity           | Fields                                                                                                                                                                                 |
-| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **User**         | FullName, Email, Password, Role (`super_admin` / `restaurant_owner` / `staff`), CreatedAt                                                                                              |
-| **Restaurant**   | NameEn/NameAm, CustomSubLink, Logo, Banner, Slogan, Images (3 free / 6 premium), LongerDescription, Location/Phone/OpenHours, AvailableLocations, FoodSpecifications — owned by a User |
-| **Category**     | Name — belongs to a Restaurant                                                                                                                                                         |
-| **Food**         | Name, Price, RatingAmount/Count, Tag, Description, Ingredients, Pic, PrepTime, Calories, BestPairings, IsSpicy — belongs to a Category                                                 |
-| **Comment**      | AuthorName, Rating, Message, Time — belongs to a Food                                                                                                                                  |
-| **Subscription** | Plan (`free`/`premium`), JoinTime, LastPaymentRenewal, LastRenewal, ExpiresAt — one per Restaurant                                                                                     |
-| **QRCode**       | TableID (optional), RestaurantName, ImageURL — belongs to a Restaurant                                                                                                                 |
+<!-- - **go-qrcode** — QR image generation
 
 ## Getting started
 
@@ -38,7 +26,7 @@ go run main.go
 
 The server starts on `:8080` (configurable via `PORT`). Tables are
 auto-migrated on startup — make sure the Postgres database in `DATABASE_URL`
-already exists.
+already exists. -->
 
 ## For `POST` and `PUT` requests their required body is under each table
 
@@ -255,6 +243,19 @@ already exists.
 }
 ```
 
+## Schema
+
+| Entity           | Fields                                                                                                                                                                                 |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **User**         | FullName, Email, Password, Role (`super_admin` / `restaurant_owner` / `staff`), CreatedAt                                                                                              |
+| **Restaurant**   | NameEn/NameAm, CustomSubLink, Logo, Banner, Slogan, Images (3 free / 6 premium), LongerDescription, Location/Phone/OpenHours, AvailableLocations, FoodSpecifications — owned by a User |
+| **Category**     | Name — belongs to a Restaurant                                                                                                                                                         |
+| **Food**         | Name, Price, RatingAmount/Count, Tag, Description, Ingredients, Pic, PrepTime, Calories, BestPairings, IsSpicy — belongs to a Category                                                 |
+| **Comment**      | AuthorName, Rating, Message, Time — belongs to a Food                                                                                                                                  |
+| **Subscription** | Plan (`free`/`premium`), JoinTime, LastPaymentRenewal, LastRenewal, ExpiresAt — one per Restaurant                                                                                     |
+| **QRCode**       | TableID (optional), RestaurantName, ImageURL — belongs to a Restaurant                                                                                                                 |
+
+
 ## Notable design decisions
 
 1. **Payments**: `POST /restaurants/:id/subscription/upgrade` flips a
@@ -266,18 +267,18 @@ already exists.
    Image _upload_ (to S3/Cloudinary/etc.) isn't included — the API expects
    already-hosted image URLs; add an upload handler if you want the backend
    to handle file storage too.
-3. **QR codes**: `POST /restaurants/:id/qrcodes` generates a PNG pointing at
-   `FRONTEND_URL/menu/:custom_sub_link[?table=:table_id]`. <!-- and saves it under
+<!-- 3. **QR codes**: `POST /restaurants/:id/qrcodes` generates a PNG pointing at
+   `FRONTEND_URL/menu/:custom_sub_link[?table=:table_id]`. and saves it under
    `./static/qrcodes/`. Point `FRONTEND_URL` at your actual customer-facing
    menu page. -->
-4. **First super_admin**: the register endpoint blocks self-registering as
+3. **First super_admin**: the register endpoint blocks self-registering as
    `super_admin` on purpose. Create the first admin directly in the database,
    or add a one-off seed script.
-5. **Multilingual**: `NameEn`/`NameAm` are separate columns rather than a
+4. **Multilingual**: `NameEn`/`NameAm` are separate columns rather than a
    generic i18n table — simplest fit for a two-language (Eng/Amh) requirement
    like yours. Extend to a translations table if you add more languages.
 
-## Project layout
+<!-- ## Project layout
 
 ```
 config/       env/config loading
@@ -287,4 +288,4 @@ middleware/   JWT auth + role guards
 handlers/     request handlers, grouped by resource
 routes/       route wiring
 utils/        JWT + password hashing helpers
-```
+``` -->
