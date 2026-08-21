@@ -41,7 +41,7 @@ already exists. -->
 | **QRCode**       | TableID (optional), RestaurantName, ImageURL — belongs to a Restaurant                                                                                                                 |
 
 
-## For `POST` and `PUT` requests their required body is under each table
+## For `POST` and `PUT` requests, their required body is under each table
 
 # API Routes
 
