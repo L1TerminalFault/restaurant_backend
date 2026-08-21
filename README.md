@@ -231,8 +231,8 @@ already exists. -->
 
 ```json
 {
-  "full_name": "Jane Doe",
-  "email": "jane@example.com",
+  "full_name": "some one",
+  "email": "none@example.com",
   "password": "password123",
   "profile_image": "https://example.com/profile.jpg",
   "role": "restaurant_owner"
