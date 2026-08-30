@@ -9,6 +9,7 @@ import (
 
 	// "restaurant-backend/utils"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -22,6 +23,13 @@ func main() {
 	}
 
 	r := gin.Default()
+	
+	// Add CORS middleware
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowAllOrigins = true
+	corsConfig.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization"}
+	r.Use(cors.New(corsConfig))
+
 	routes.Setup(r)
 
 	log.Printf("server listening on :%s", config.App.Port)
