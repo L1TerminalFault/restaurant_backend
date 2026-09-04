@@ -42,6 +42,7 @@ func Setup(r *gin.Engine) {
 		public.GET("/restaurants/:id/categories/:categoryId/foods", handlers.ListFoods)
 		public.GET("/restaurants/:id/categories/:categoryId/foods/:foodId", handlers.GetFood)
 		public.POST("/foods/:foodId/comments", handlers.AddComment)
+		public.POST("/restaurants/:id/orders", handlers.CreateOrder)
 	}
 
 	// ---------- Authenticated user profile routes ----------
@@ -81,6 +82,10 @@ func Setup(r *gin.Engine) {
 		// restaurants.POST("/:id/qrcodes", handlers.CreateQR)
 		// restaurants.GET("/:id/qrcodes", handlers.ListQRCodes)
 		// restaurants.DELETE("/:id/qrcodes/:qrId", handlers.DeleteQR)
+
+		// Order CRUD
+		restaurants.GET("/:id/orders", handlers.ListOrders)
+		restaurants.PUT("/:id/orders/:orderId/status", handlers.UpdateOrderStatus)
 	}
 
 	// ---------- Platform super_admin (Full Global Oversight & CRUD) ----------
