@@ -43,6 +43,8 @@ func Connect() {
 		&models.Comment{},
 		&models.Subscription{},
 		&models.QRCode{},
+		&models.Order{},
+		&models.OrderItem{},
 	); err != nil {
 		log.Fatalf("auto-migration failed: %v", err)
 	}
