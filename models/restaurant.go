@@ -67,7 +67,7 @@ type Restaurant struct {
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 
-	Owner        User          `gorm:"foreignKey:OwnerID" json:"-"`
+	Owner        *User         `gorm:"foreignKey:OwnerID" json:"owner,omitempty"`
 	Categories   []Category    `gorm:"foreignKey:RestaurantID;constraint:OnDelete:CASCADE;" json:"categories,omitempty"`
 	Subscription *Subscription `gorm:"foreignKey:RestaurantID;constraint:OnDelete:CASCADE;" json:"subscription,omitempty"`
 	QRCodes      []QRCode      `gorm:"foreignKey:RestaurantID;constraint:OnDelete:CASCADE;" json:"qr_codes,omitempty"`

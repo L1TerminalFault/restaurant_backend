@@ -97,6 +97,14 @@ func CreateRestaurant(c *gin.Context) {
 		FoodSpecifications: input.FoodSpecifications,
 	}
 
+	if role == models.RoleSuperAdmin && input.Email != "" && input.Password != "" {
+		// Attempt to fetch the populated owner profile to return in JSON
+		var fetchedOwner models.User
+		if err := tx.Where("id = ?", ownerID).First(&fetchedOwner).Error; err == nil {
+			restaurant.Owner = &fetchedOwner
+		}
+	}
+
 	if err := tx.Create(&restaurant).Error; err != nil {
 		tx.Rollback()
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create restaurant"})
@@ -121,7 +129,7 @@ func CreateRestaurant(c *gin.Context) {
 // ListRestaurants is public — used for browsing/search.
 func ListRestaurants(c *gin.Context) {
 	var restaurants []models.Restaurant
-	if err := database.DB.Find(&restaurants).Error; err != nil {
+	if err := database.DB.Preload("Owner").Find(&restaurants).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to fetch restaurants"})
 		return
 	}
@@ -133,7 +141,7 @@ func GetRestaurant(c *gin.Context) {
 	id := c.Param("id")
 
 	var restaurant models.Restaurant
-	query := database.DB.Preload("Categories.Foods.Comments").Preload("Subscription")
+	query := database.DB.Preload("Owner").Preload("Categories.Foods.Comments").Preload("Subscription")
 
 	// Allow lookup by ID or by custom sub-link.
 	if _, err := uuid.Parse(id); err == nil {
