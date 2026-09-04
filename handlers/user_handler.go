@@ -14,7 +14,7 @@ import (
 func GetProfile(c *gin.Context) {
 	userID := c.MustGet("user_id").(uuid.UUID)
 	var user models.User
-	if err := database.DB.Where("id = ?", userID).First(&user).Error; err != nil {
+	if err := database.DB.Preload("Restaurants").Where("id = ?", userID).First(&user).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
 		return
 	}
