@@ -5,6 +5,7 @@ import (
 
 	"restaurant-backend/database"
 	"restaurant-backend/models"
+	"restaurant-backend/utils"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -24,6 +25,8 @@ type createRestaurantInput struct {
 	OpenHours          string   `json:"open_hours"`
 	AvailableLocations []string `json:"available_locations"`
 	FoodSpecifications string   `json:"food_specifications"`
+	Email              string   `json:"email"`
+	Password           string   `json:"password"`
 }
 
 // CreateRestaurant creates a restaurant owned by the authenticated user and
@@ -36,6 +39,7 @@ func CreateRestaurant(c *gin.Context) {
 	}
 
 	ownerID := c.MustGet("user_id").(uuid.UUID)
+	role := c.MustGet("role").(models.Role)
 
 	var existing models.Restaurant
 	if err := database.DB.Where("custom_sub_link = ?", input.CustomSubLink).First(&existing).Error; err == nil {
@@ -45,6 +49,35 @@ func CreateRestaurant(c *gin.Context) {
 
 	if len(input.Images) > models.MaxImagesFree {
 		input.Images = input.Images[:models.MaxImagesFree] // trim; upgrade to premium to add more
+	}
+
+	tx := database.DB.Begin()
+
+	// If super_admin provides email and password, create an owner user for the restaurant
+	if role == models.RoleSuperAdmin && input.Email != "" && input.Password != "" {
+		hashed, err := utils.HashPassword(input.Password)
+		if err != nil {
+			tx.Rollback()
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to hash password"})
+			return
+		}
+
+		var ownerUser models.User
+		if err := tx.Where("email = ?", input.Email).First(&ownerUser).Error; err != nil {
+			// Email not found, create new user
+			ownerUser = models.User{
+				FullName: input.NameEn + " Owner",
+				Email:    input.Email,
+				Password: hashed,
+				Role:     models.RoleRestaurantOwner,
+			}
+			if err := tx.Create(&ownerUser).Error; err != nil {
+				tx.Rollback()
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create restaurant owner"})
+				return
+			}
+		}
+		ownerID = ownerUser.ID
 	}
 
 	restaurant := models.Restaurant{
@@ -64,7 +97,6 @@ func CreateRestaurant(c *gin.Context) {
 		FoodSpecifications: input.FoodSpecifications,
 	}
 
-	tx := database.DB.Begin()
 	if err := tx.Create(&restaurant).Error; err != nil {
 		tx.Rollback()
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create restaurant"})
@@ -156,6 +188,22 @@ func UpdateRestaurant(c *gin.Context) {
 	restaurant.AvailableLocations = input.AvailableLocations
 	restaurant.FoodSpecifications = input.FoodSpecifications
 	// CustomSubLink intentionally not editable here to avoid breaking printed QR codes.
+
+	// Also update the owner's email and password if provided
+	if input.Email != "" || input.Password != "" {
+		var ownerUser models.User
+		if err := database.DB.Where("id = ?", restaurant.OwnerID).First(&ownerUser).Error; err == nil {
+			if input.Email != "" {
+				ownerUser.Email = input.Email
+			}
+			if input.Password != "" {
+				if hashed, err := utils.HashPassword(input.Password); err == nil {
+					ownerUser.Password = hashed
+				}
+			}
+			database.DB.Save(&ownerUser)
+		}
+	}
 
 	if err := database.DB.Save(&restaurant).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to update restaurant"})
